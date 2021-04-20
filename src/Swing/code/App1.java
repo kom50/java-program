@@ -7,8 +7,15 @@ public class App1 {
 
     private JButton button1;
     private JPanel panel1;
-
+    private JMenuBar mBar;
     public App1() {
+        mBar = new JMenuBar();
+        mBar.add(new JMenu("File"));
+        mBar.add(new JMenu("Edit"));
+
+
+        panel1.add(mBar, BorderLayout.NORTH);
+
 
         button1.addActionListener(e -> {
             System.out.println("Hello bro");
