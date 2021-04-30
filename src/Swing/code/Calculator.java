@@ -42,8 +42,6 @@ public class Calculator extends JFrame implements ActionListener {
                 l++;
             }
         }
-
-
         text = new JTextField();
         text.setEditable(false);
         text.setBorder(BorderFactory.createLineBorder(Color.blue, 2, true));
@@ -66,10 +64,11 @@ public class Calculator extends JFrame implements ActionListener {
     Object ans = null;
     public void actionPerformed(ActionEvent e) {
         String s;
+        /* If = (equals) sign is present in expression and press any button
+         then equals sign is remove form expression except =(equals) button */
         if (text.getText().indexOf('=') != -1){
             text.setText(ans.toString());
         }
-
         Object obj = e.getSource();
         for (int i = 3; i < jb.length - 1; i++) {
             if (obj == jb[i]) {
@@ -77,22 +76,22 @@ public class Calculator extends JFrame implements ActionListener {
                     text.setText(text.getText() + jb[i].getText());
             }
         }
-        if (obj == jb[0]) {
+        if (obj == jb[0]) { // power button
             if (!text.getText().isEmpty()) {
                 double d = Double.parseDouble(text.getText());
                 text.setText(String.valueOf(d * d));
             }
         }
-        if (obj == jb[2]) {
+        if (obj == jb[2]) { // remove one last character
             s = text.getText();
             if (!s.isEmpty()) {
                 text.setText(s.substring(0, s.length() - 1));
             }
         }
-        if (obj == jb[1]) {
+        if (obj == jb[1]) { // remove whole expression  button
             text.setText("");
         }
-        if (obj == jb[18]) {
+        if (obj == jb[18]) {  // .(dot) button
             s = text.getText();
             if(s.isEmpty() || isOperator(getLastChar(s))){
                 text.setText(s + "0.");
@@ -112,7 +111,7 @@ public class Calculator extends JFrame implements ActionListener {
                     text.setText(s + ".");
             }
         }
-        if (obj == jb[3]) {
+        if (obj == jb[3]) { // / button
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
                 if (isOperator(getLastChar(s))) {
@@ -121,7 +120,7 @@ public class Calculator extends JFrame implements ActionListener {
                 text.setText(s + "/");
             }
         }
-        if (obj == jb[7]) {
+        if (obj == jb[7]) { // * button
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
                 if (isOperator(getLastChar(s))) {
@@ -130,7 +129,7 @@ public class Calculator extends JFrame implements ActionListener {
                 text.setText(s + "*");
             }
         }
-        if (obj == jb[11]) {
+        if (obj == jb[11]) { // - button
             s = text.getText();
             if (!s.isEmpty()) {
                 if (isOperator(getLastChar(s))) {
@@ -141,7 +140,7 @@ public class Calculator extends JFrame implements ActionListener {
             if (s.isEmpty())
                 text.setText(s + "-");
         }
-        if (obj == jb[15]) {
+        if (obj == jb[15]) {  // + button
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
                 if (isOperator(getLastChar(s))) {
@@ -150,7 +149,7 @@ public class Calculator extends JFrame implements ActionListener {
                 text.setText(s + "+");
             }
         }
-        if (obj == jb[16]) {
+        if (obj == jb[16]) { // % button
             boolean f = false;
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
@@ -180,11 +179,12 @@ public class Calculator extends JFrame implements ActionListener {
     boolean isOperator(char ch) {
         return (ch < 48 || ch > 57) && ch != '.';
     }
-
+    // Returns the last char of given string
     char getLastChar(String s){
         return s.charAt(s.length() - 1);
     }
     public static void main(String[] args) {
+
         SwingUtilities.invokeLater(Calculator::new); // Method reference
     }
 }
