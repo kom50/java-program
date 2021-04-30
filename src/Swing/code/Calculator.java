@@ -94,7 +94,7 @@ public class Calculator extends JFrame implements ActionListener {
         }
         if (obj == jb[18]) {
             s = text.getText();
-            if(s.isEmpty() || isDigit(s.charAt(s.length() - 1))){
+            if(s.isEmpty() || isOperator(getLastChar(s))){
                 text.setText(s + "0.");
             }else {
                 int f = 0, i;
@@ -115,7 +115,7 @@ public class Calculator extends JFrame implements ActionListener {
         if (obj == jb[3]) {
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
-                if (isDigit(s.charAt(s.length() - 1))) {
+                if (isOperator(getLastChar(s))) {
                     s = s.substring(0, s.length() - 1);
                 }
                 text.setText(s + "/");
@@ -124,7 +124,7 @@ public class Calculator extends JFrame implements ActionListener {
         if (obj == jb[7]) {
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
-                if (isDigit(s.charAt(s.length() - 1))) {
+                if (isOperator(getLastChar(s))) {
                     s = s.substring(0, s.length() - 1);
                 }
                 text.setText(s + "*");
@@ -133,7 +133,7 @@ public class Calculator extends JFrame implements ActionListener {
         if (obj == jb[11]) {
             s = text.getText();
             if (!s.isEmpty()) {
-                if (isDigit(s.charAt(s.length() - 1))) {
+                if (isOperator(getLastChar(s))) {
                     s = s.substring(0, s.length() - 1);
                 }
                 text.setText(s + "-");
@@ -144,7 +144,7 @@ public class Calculator extends JFrame implements ActionListener {
         if (obj == jb[15]) {
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
-                if (isDigit(s.charAt(s.length() - 1))) {
+                if (isOperator(getLastChar(s))) {
                     s = s.substring(0, s.length() - 1);
                 }
                 text.setText(s + "+");
@@ -155,7 +155,7 @@ public class Calculator extends JFrame implements ActionListener {
             s = text.getText();
             if (!s.isEmpty() && s.charAt(0) != '-') {
                 for (char c : op) {
-                    if (s.charAt(s.length() - 1) == c) {
+                    if (getLastChar(s) == c) {
                         f = true;
                     }
                 }
@@ -177,8 +177,12 @@ public class Calculator extends JFrame implements ActionListener {
         }
     }
     // If character is digit then this method return False and otherwise return True
-    boolean isDigit(char ch) {
+    boolean isOperator(char ch) {
         return (ch < 48 || ch > 57) && ch != '.';
+    }
+
+    char getLastChar(String s){
+        return s.charAt(s.length() - 1);
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Calculator::new); // Method reference
