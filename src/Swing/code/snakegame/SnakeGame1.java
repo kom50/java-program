@@ -1,11 +1,17 @@
 package Swing.code.snakegame;
-
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.awt.event.*;
 
+class SnakeScore implements Serializable {
+    int score;
+    public SnakeScore(){  score = 0; }
+    int getScore(){   return this.score;    }
+    void setScore(int score) {  this.score = score;   }
+}
 
 public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
 
@@ -22,16 +28,17 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
     ImageIcon headIconRight = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/hright.png");
     ImageIcon headIconLeft = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/hleft.png");
     ImageIcon headIconUp = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/hup.png");
-    ImageIcon closmouthIcon = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/closmouth.png");
+//    ImageIcon closmouthIcon = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/closmouth.png");
 
     // Food
     int foodX = 100, foodY = 100;
 
     ImageIcon foodIcon = new ImageIcon("G:/InteliJ 2021/src/Swing/code/snakegame/images/food.png");
     JLabel food = new JLabel(foodIcon);
-
     javax.swing.Timer timer;
 
+    // Store snake highest  score
+    SnakeScore score = new SnakeScore();
     private SnakeGame1() {
         super("Snake Game ");
         BorderLayout borderLayout = new BorderLayout(10, 10);
@@ -81,6 +88,8 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
         box.validate();
     }
 
+    boolean isGameOver;
+
     @Override
     public void actionPerformed(ActionEvent event){
         System.out.println("Event Listener");
@@ -101,21 +110,67 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
         // reload
         reloadPosition(x, y);
         printSnake();
-        if(snakeY.getFirst() == y && snakeX.getFirst() == snakeX.getFirst() - 40)
-            snake.getFirst().setIcon(closmouthIcon);
         if (snakeX.getFirst() == foodX && snakeY.getFirst() == foodY){
             foodGenerate();
             foodPrint();
 
             // Create new body and set icon
-            snake.addLast(new JLabel(bodyIcon, (int) JLabel.CENTER_ALIGNMENT)); //add in snake
+            snake.addLast(new JLabel(bodyIcon, SwingConstants.CENTER)); //add in snake
             snake.getLast().setBounds(snakeX.getLast(), snakeY.getLast(), 20, 20);
             box.add(snake.getLast());  // add on box panel
 
             snakeX.addLast(snakeX.getLast()); // add snake X and last
             snakeY.addLast(snakeY.getLast());
+
+
         }
         snake.getFirst().setIcon(icon);
+
+        // Game over snippets
+        isGameOver =   box.getHeight() - (box.getHeight() % 10) == y + 20 || box.getWidth() - (box.getWidth() % 10) == x - 20 || x == -20 || y == -20;
+
+        if(isGameOver){
+            JLabel gameLabel =new JLabel("Game over");
+            JOptionPane.showConfirmDialog(this, "Do you want to play again.", "Snake Game", JOptionPane.YES_NO_OPTION);
+
+            gameLabel.setBounds(300, 250 ,200, 100);
+            gameLabel.setBackground(Color.pink);
+            gameLabel.setFont(new Font("Arial", Font.BOLD, 38));
+            gameLabel.setForeground(Color.RED);
+            box.add(gameLabel);
+            timer.stop();
+            box.revalidate();
+
+            if(snake.size() - 3 > score.getScore()){
+                score.setScore(snake.size() - 3);
+                try {
+                    writeScore();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        System.out.println("score.getScore() -------------------------------- >  "+score.getScore());
+    }
+
+
+    void writeScore() throws FileNotFoundException {
+        try{
+            FileOutputStream fileOutputStream = new FileOutputStream("src/Swing/code/snakegame/ScoreFile/Score.ser");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(score);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    void readScore()  {
+        try{
+            FileInputStream fileInputStream = new FileInputStream("src/Swing/code/snakegame/ScoreFile/Score.ser");
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            score = (SnakeScore) objectInputStream.readObject();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
     @Override
@@ -157,6 +212,22 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
                     timer.stop();
                     isStart = false;
                 }
+                if(isGameOver){
+                    System.out.println("888888888888888888 ---------------------------- >>>>>> ");
+                    for (JLabel jLabel : snake) {
+                        box.remove(jLabel);
+                    }
+
+                    box.remove(food);
+                    box.removeAll();
+                    this.validate();
+                    box.validate();
+
+
+                    initGame();
+                    printSnake();
+                    foodPrint();
+                }
             }
         snake.getFirst().setIcon(icon);
     }
@@ -188,7 +259,7 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
         snakeX.removeLast();
         snakeY.addFirst(y1);
         snakeY.removeLast();
-        System.out.println(snakeX+" "+snakeY);
+//        System.out.println(snakeX+" "+snakeY);
 
     }
     void printSnake(){
@@ -202,28 +273,27 @@ public class SnakeGame1 extends JFrame implements ActionListener, KeyListener{
         List<Integer> list1 = Arrays.asList(60, 60, 60);
         snakeX = new LinkedList<>(list);
         snakeY = new LinkedList<>(list1);
-
         snake = new LinkedList<>();
 
+        x = 80;
+        y = 60;
         for(int i = 0; i < 3; i++){
-            snake.add(new JLabel(bodyIcon, (int) JLabel.CENTER_ALIGNMENT));
+            snake.add(new JLabel(bodyIcon,  SwingConstants.CENTER));
             snake.get(i).setBackground(Color.RED);
-//            snake.get(i).setBorder(BorderFactory.createLineBorder(Color.BLACK));
             snake.get(i).setBounds(snakeX.get(i), snakeY.get(i), 20,20);
-//             snake.getLast().setIcon(icon);
             box.add(snake.get(i));
         }
         icon  = headIconRight;
         snake.getFirst().setIcon(headIconRight);
-//        snake.getFirst().setBackground(Color.BLUE);
-
         // add food
         food.setBounds(foodX, foodY, 20, 20);
         food.setIcon(foodIcon);
         box.add(food);
+        // read Score from file
+        readScore();
     }
 
-    JPanel header;
+//    JPanel header;
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() ->{
             new SnakeGame1().setVisible(true);
