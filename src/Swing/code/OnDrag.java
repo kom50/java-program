@@ -6,20 +6,23 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 public class OnDrag extends MouseAdapter implements MouseMotionListener{
-    private Component component, dragComponent;
+//    private final Component component;
+    private final Component dragComponent;
     private int x, y;
+    // onDragComponent is component that is not actually draw, on this component we add mouseListener and mouseMotionListener
+    // dragComponent is a component that dragged actually
     public OnDrag(Component onDragComponent, Component dragComponent){
-        this.component = onDragComponent;
-        this.dragComponent = dragComponent;
+        this.dragComponent = dragComponent;   // Frame
         // set Listener on component
-        this.component.addMouseListener(this);
-        this.component.addMouseMotionListener(this);
+        onDragComponent.addMouseListener(this);
+        onDragComponent.addMouseMotionListener(this);
     }
     @Override
     public void mouseClicked(MouseEvent e) {
         int count = e.getClickCount();  // if mouse double clicked on the component then window is dispose
         if(count == 2) {
-            ((Window) dragComponent).dispose();
+            if(dragComponent instanceof Window) // If given component is a type of window component then window is dispose otherwise not
+                ((Window) dragComponent).dispose();
         }
     }
     @Override

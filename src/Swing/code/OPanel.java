@@ -3,7 +3,9 @@ import javax.swing.*;
 import java.awt.*;
 public class OPanel extends JPanel {
     Color startColor = Color.BLACK, endColor = Color.white;
-    int width = 100, height = 100;
+    int width = 100, height = 100, radius;
+    public int getRadius() {   return radius;    }
+    public void setRadius(int radius) {  this.radius = radius;    }
     public void setStartColor(Color startColor) {
         this.startColor = startColor;
     }
@@ -19,7 +21,7 @@ public class OPanel extends JPanel {
         width  = getWidth();
         Paint paint = new GradientPaint(0.0f, 0.0f, startColor, width, height, endColor, true);
         graphics2D.setPaint(paint);
-        graphics2D.fillRect(0, 0, getWidth(), getHeight());
+        graphics2D.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
     }
 }
 
