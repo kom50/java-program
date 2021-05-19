@@ -3,9 +3,8 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
-public class OnDrag extends MouseAdapter implements MouseMotionListener{
+public class OnDrag extends MouseAdapter{
 //    private final Component component;
     private final Component dragComponent;
     private int x, y;
