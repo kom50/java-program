@@ -1,4 +1,4 @@
-package Swing.code;
+package Swing.code.code;
 import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
@@ -33,7 +33,4 @@ public class OnDrag extends MouseAdapter{
     public void mouseDragged(MouseEvent e) {
         dragComponent.setLocation(e.getXOnScreen() - x, e.getYOnScreen() - y);
     }
-    @Override
-    public void mouseMoved(MouseEvent e) {  /*	*/}
-
 }
